@@ -85,10 +85,11 @@ router.post('/har/addHarToCollection', commonUtils.checkLoginAjax, function (req
 router.post('/har/save', commonUtils.checkLoginAjax, function (req, res, next) {
     var harName = req.body.harName;
     var harId = req.body.harId;
+    var harMemo = req.body.harMemo;
     var harContent = req.body.harContent;
     var uid = req.session.user.userId;
 
-    moklrModel.updateHar(uid, harId, harName, harContent, function (err, result) {
+    moklrModel.updateHar(uid, harId, harName, harContent, harMemo, function (err, result) {
         if (err) {
             return res.json({
                 success: false,

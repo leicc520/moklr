@@ -36,6 +36,7 @@ var HarSchema = new Schema({
     collectionId: {type: String, index: true},
     type: String,//"GET" or "POST" or...与content里的method字段相同
     name: String,
+    memo: String,
     content: {},
     date: {type: Date, default: Date.now}
 });
@@ -247,12 +248,13 @@ exports.deleteStatusAPILogs = function (uid, statusAPIId, callback) {
 
 
 //更新har
-exports.updateHar = function (userId, harId, harName, harContent, callback) {
+exports.updateHar = function (userId, harId, harName, harContent, harMemo, callback) {
     var conditions = {harId: harId, userId: userId};
     var update = {
         $set: {
             content: harContent,
             name: harName,
+            memo: harMemo,
             type: harContent && (harContent.method || ""),
             date: Date.now()
         }

@@ -465,7 +465,7 @@
                 var harContent = _this.getHarObject();
                 var harName = $("#har_name")[0] && $("#har_name").val();
                 var harId = $("#har_id")[0] && $("#har_id").val();
-
+                var harMemo = $("#har_memo")[0] && $("#har_memo").val();
                 if (!harId) {
                     dialog({
                         title: 'Warning',
@@ -494,6 +494,7 @@
                     data: {
                         harName: harName,
                         harId: harId,
+                        harMemo: harMemo,
                         harContent: harContent
                     },
                     success: function (result) {
@@ -893,7 +894,8 @@
             har.content = har.content || {};
             har.content.har_id = har.harId;
             har.content.har_name = har.name;
-
+            har.content.har_memo = $.trim(har.memo);
+            
             var html = juicer(tpl, har.content);
             $("#harform").html(html);
             if (har.content && har.content.method === "POST") {
