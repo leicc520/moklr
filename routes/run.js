@@ -93,6 +93,13 @@ router.get('/execById', function (req, res, next) {
 });
 
 function run(r, callback) {
+    var headers = {};
+    if (!!r.headers && r.headers.length > 0) {
+        for (var i = 0; i < r.headers.length; i++) {
+            headers[r.headers[i].name] = r.headers[i].value;
+        }; 
+        r.headers = headers;  
+    };
     if (r.method == "GET") {
         var options = r;
         request(options, function (error, response, body) {
@@ -122,11 +129,14 @@ function run(r, callback) {
         } else if (mimeType === 'application/json') {
             try {
                 var textjson = JSON.parse(r.postData.text || {});
-                r.form = textjson;
+                r.form = null;
+                r.body = r.postData.text;
+                //r.json = true;
+                r.headers["Content-type"] = "application/json";
+                r.postData = null;
             } catch (e) {
                 return callback && callback(new Error("postData[text] must be json format"));
             }
-
         }
 
         //console.dir(r);
