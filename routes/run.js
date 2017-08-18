@@ -94,12 +94,19 @@ router.get('/execById', function (req, res, next) {
 
 function run(r, callback) {
     var headers = {};
+    if (r.cookies && r.cookies.length > 0) {
+        var cookies = [];
+        for (var i = 0; i < r.cookies.length; i++) {
+            cookies.push(r.cookies[i].name + "=" + r.cookies[i].value);
+        };
+        headers["Cookie"] = cookies.join('&');
+    };
     if (!!r.headers && r.headers.length > 0) {
         for (var i = 0; i < r.headers.length; i++) {
             headers[r.headers[i].name] = r.headers[i].value;
-        }; 
-        r.headers = headers;  
+        };   
     };
+    r.headers = headers;
     if (r.method == "GET") {
         var options = r;
         request(options, function (error, response, body) {
@@ -115,6 +122,9 @@ function run(r, callback) {
 
     } else if (r.method == "POST") {
         r.form = {};
+        if(!r.postData) {
+            return callback && callback(new Error("postData cant't be empty"));
+        }
         var mimeType = r.postData.mimeType;
         if (mimeType === 'application/x-www-form-urlencoded' || mimeType === 'multipart/form-data') {
             var params = {};
